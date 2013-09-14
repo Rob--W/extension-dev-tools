@@ -57,6 +57,9 @@ In order to build (or even test) a Safari extension, you need a certificate from
    The following command creates `private_key.key` and `cer_sign_request.csr`:
 
         openssl req -nodes -newkey rsa:2048 -keyout private_key.key -out cer_sign_request.csr
+        # You do NOT want to loose these files (esp. the private key): make it read-only.
+        chmod -w private_key.key cer_sign_request.csr
+
 3. Upload `cer_sign_request.csr` to Apple, and download the certificate (link at step 1).
 4. Install the certificate on your OS.
    My `.key` and `.csr` files were created on a different computer, so Safari did not accept
@@ -66,9 +69,12 @@ In order to build (or even test) a Safari extension, you need a certificate from
    (private key + certificate) from the `.pem` and `.cer` file. Commands used:
 
         # Create pem file from key
-        > (echo '-----BEGIN CERTIFICATE-----'; base64 safari_extension.cer; echo '-----END CERTIFICATE-----') > safari_extension.crt 
+        (echo '-----BEGIN CERTIFICATE-----'; base64 safari_extension.cer; echo '-----END CERTIFICATE-----') > safari_extension.crt 
         # Create pfx file
-        > openssl pkcs12 -inkey private_key.key -in safari_extension.crt -export -out safari_extension.pfx
+        openssl pkcs12 -inkey private_key.key -in safari_extension.crt -export -out safari_extension.pfx
+
+    The last command will prompt for a password. This password will be asked when you import the pfx file.
+
         Enter Export Password:
         Verifying - Enter Export Password:
     After creating the `.pfx` file, I copied it (securely!) to my Windows VM (which is running Safari).
