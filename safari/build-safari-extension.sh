@@ -1,4 +1,13 @@
 #!/bin/bash
+# Copyright 2013 Rob Wu <gwnRob@gmail.com> (https://robwu.nl/)
+# Last modified 14 sept 2013
+# 
+# Environment variables:
+# XAR       = Path to patched xar executable
+# CERTDIR   = Path to certificates and keys
+#
+# Requirements: certs/ directory as defined in README.md
+
 if [ $(uname) == 'Darwin' ] ; then
     readlink=greadlink
 else
@@ -7,6 +16,10 @@ fi
 curdir="$( cd "$( dirname "$( readlink -f "${BASH_SOURCE[0]}" )" )/" && pwd )"
 certdir="${curdir}/certs"
 xar="${curdir}/xar"
+
+# Allow override through environment variables
+[ -n "$XAR" ] && xar="$XAR"
+[ -n "$CERTDIR" ] && certdir="$CERTDIR"
 
 if [ ! -x "${xar}" ] ; then
     echo "${xar} is not an executable!"

@@ -46,6 +46,11 @@ To build the extension, go to Safari:
    `ln -s path/to/build-safari-extension.sh ~/bin/safariext-build`.  
    After doing that, you can easily build Safari extensions using `safariext-build path/to/name.safariextension`
    without having to carry around the files and developer certificates.
+6. If you wish to (temporarily) use a different certificate directory for a specific project, set the `CERTDIR`
+   environment variable to override the certdir set in the build script.  
+   Example:
+
+        CERTDIR=path/to/certs safariext-build path/to/name.safariextension
 
 
 ## Certificate
