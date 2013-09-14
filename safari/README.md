@@ -31,7 +31,7 @@ To build the extension, go to Safari:
 3. Create supplementary files from the pfx or p12 file and the safari extension:
 
         cd certs
-        path/to/xar -f ../dist/safari/yt_lyrics.safariextz --extract-certs .
+        path/to/xar -f path/to/name.safariextz --extract-certs .
         rm cert00    # Your developer certificate
         # safari_extension.pfx contains your private key and cert, keep it private!
         openssl pkcs12 -in safari_extension.pfx -nodes | openssl x509 -outform der -out cert.der
