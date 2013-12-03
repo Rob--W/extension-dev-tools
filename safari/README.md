@@ -28,13 +28,33 @@ To build the extension, go to Safari:
         cd ..
         rm -r xar-1.6.1
 
-3. Create supplementary files from the pfx or p12 file and the safari extension:
+3. Put all required files in the `certs/` directory:
+   - Download certificates from https://www.apple.com/certificateauthority/
+    - `AppleWWDRCA.cer`
+    
+            wget https://developer.apple.com/certificationauthority/AppleWWDRCA.cer -OAppleWWDRCA.cer
+    - `AppleIncRootCertificate.cer`
+
+            wget https://www.apple.com/appleca/AppleIncRootCertificate.cer -OAppleIncRootCertificate.cer
+    - `safari_extension.cer`
+      Log in to https://developer.apple.com/account/safari/certificate/certificateList.action
+      and download the certificate.
+    - `key.pem`
+      This was generated together with your CSR (see section "Certificate").
+      
+   If you are trying to automate the build steps for an existing extension, follow the following steps instead.
+   This is advised, because there is a chance that one of the certificates have been modified since its initial
+   creation.
 
         cd certs
         path/to/xar -f path/to/name.safariextz --extract-certs .
-        rm cert00    # Your developer certificate
-        # safari_extension.pfx contains your private key and cert, keep it private!
-        openssl pkcs12 -in safari_extension.pfx -nodes | openssl x509 -outform der -out cert.der
+        mv cert00 safari_extension.cer
+        mv cert01 AppleWWDRCA.cer
+        mv cert02 AppleIncRootCertificate.cer
+
+   The private key's location is only known to you. If you've got a PFX or P12 file, then you can use the
+   following command to extract the private key:
+
         openssl pkcs12 -in safari_extension.pfx -nodes | openssl rsa -out key.pem
 
    If you wish to keep the `certs` directory in a different location, edit the shell script discussed
@@ -57,7 +77,7 @@ To build the extension, go to Safari:
 In order to build (or even test) a Safari extension, you need a certificate from Apple.
 
 1. Create an Apple ID if not already done. After registering, visit 
-   https://developer.apple.com/certificates/index.action#safarilist
+   https://developer.apple.com/account/safari/certificate/certificateList.action
 2. To get a certificate, you need to get a private key and a CSR (Certificate Signing Request) file.
    The following command creates `private_key.key` and `cer_sign_request.csr`:
 
@@ -85,3 +105,9 @@ In order to build (or even test) a Safari extension, you need a certificate from
     After creating the `.pfx` file, I copied it (securely!) to my Windows VM (which is running Safari).
     I installed the certificate (`.pfx`), and Safari finally recognized my certificate!
 
+## Refreshing an expired certificate
+Extension certificates issued by Apple expire after 1 year. Update your certificate as follows:
+
+1. Submit the CSR file to Apple (may be the same as the one created at step 2 at the "Certificate" section).
+2. Download `safari_extension.cer` from Apple.
+3. Repeat step 3 of section "Building (automated, Linux/Mac)".
