@@ -9,13 +9,15 @@ the following line to your `.bashrc`:
     source path/to/extension-dev-tools/bashrc
 
 ## Chrome
-- See `chrome/`
+- See `chrome/README.md` for details.
 
 ## Firefox
-- See `firefox/`
+- Quick start: Create a file or symlink at `firefox/codesigning.pem`
+- See `firefox/README.md` for details.
 
 ## Safari
-- See `safari/`
+- Quick start: Create a directory or symlink at `safari/certs`
+- See `safari/README.md` for details.
 
 ## Opera
 ## Internet Explorer
