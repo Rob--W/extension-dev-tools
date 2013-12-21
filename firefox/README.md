@@ -6,8 +6,9 @@
    are copied to the "install.rdf" file inside the XPI, and the original install.rdf
    is replaced with this new install.rdf inside the XPI file
    (the previous one is moved to `install.rdf.bak`).
-3. If an environment variable "`XPIPEM`" is set, the XPI file is signed using the file
-   defined in this environment variable.
+3. If an environment variable "`XPIPEM`" is set, t
+   The XPI file is signed using the `codesigning.pem`. You can set the pem path via the
+   `XPIPEM` environment variable. If the pem file does not exist, the XPI is not signed.
 
 The PEM file should contain the following files:
 

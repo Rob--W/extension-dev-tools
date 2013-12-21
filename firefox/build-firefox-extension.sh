@@ -21,6 +21,14 @@ if [ $# == 0 ] ; then
 fi
 cd "$1" || exit 2
 
+readlink=readlink
+[ "$(uname)" == "Darwin" ] && readlink=greadlink
+
+curdir="$( cd "$( dirname "$( "${readlink}" -f "${BASH_SOURCE[0]}" )" )/" && pwd )"
+
+DEFAULT_XPIPEM="${curdir}/codesigning.pem"
+# If environment variable is not set, use default PEM file:
+[ -z "${XPIPEM}" ] && [ -f "${DEFAULT_XPIPEM}" ] && XPIPEM="${DEFAULT_XPIPEM}"
 
 echo "Building Firefox add-on"
 if type cfx > /dev/null 2>/dev/null ; then
@@ -76,8 +84,11 @@ else
 fi
 
 if [ ! -f "${XPIPEM}" ] ; then
-    [ -z "${XPIPEM}" ] && XPIPEM="environment variable XPIPEM is not set"
-    echo "XPI not signed because pem file not found (${XPIPEM})."
+    if [ -z "${XPIPEM}" ] ; then
+        echo "XPI not signed because PEM file is not set (environment variable XPIPEM= )"
+    else
+        echo "XPI not signed because pem file not found (${XPIPEM})."
+    fi
     exit
 fi
 
