@@ -7,6 +7,8 @@ The documentation for each browser can be found in the separate subdirectories.
 - See `chrome/`
 
 ## Firefox
+- See `firefox/`
+
 ## Safari
 - See `safari/`
 
