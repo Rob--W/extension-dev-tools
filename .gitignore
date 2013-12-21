@@ -1,0 +1,3 @@
+# Never check in your certificates!
+firefox/codesigning.pem
+safari/certs/
