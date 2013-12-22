@@ -1,3 +1,8 @@
 # Never check in your certificates!
 firefox/codesigning.pem
 safari/certs/
+
+# Ignore dotfiles. If you want to store certs in the same dir, prefix
+# the path with a dot and you won't accidentally add it to the source tree.
+.*
+!.gitignore
