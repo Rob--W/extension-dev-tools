@@ -1,6 +1,14 @@
-# Documentation for browser extension developers
-Author: Rob Wu <gwnRob@gmail.com> (https://robwu.nl/).
+This repository contains tools to ease the development and deployment
+of browser extensions. Most tools are shell scripts (Bash) or functions,
+directly usable on Linux and Mac.
 
+If you're using Windows, you need to install [Cygwin](http://www.cygwin.com/)
+or [Gnu On Windows](https://github.com/bmatzelle/gow/wiki).
+
+Author: Rob Wu <gwnRob@gmail.com> (https://robwu.nl/).  
+Website: https://github.com/Rob--W/extension-dev-tools
+
+# Usage
 The documentation for each browser can be found in the separate subdirectories.
 
 The easiest way to integrate this set of tools in your environment is by adding
