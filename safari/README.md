@@ -1,5 +1,5 @@
 Copyright Rob Wu <gwnRob@gmail.com> (https://robwu.nl/)  
-Last modified: 14 september 2013
+Last modified: 3 december 2013
 
 ## File structure
 * `update.plist` - to be placed on the server hosting the extension
