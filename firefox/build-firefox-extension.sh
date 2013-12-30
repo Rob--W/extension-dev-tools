@@ -1,6 +1,6 @@
 #!/bin/bash
 # Copyright 2013 Rob Wu <gwnRob@gmail.com> (https://robwu.nl/)
-# Last modified 21 dec 2013
+# Last modified 30 dec 2013
 # 
 # 1. Runs cfx xpi (on failure, exit immediately)
 # 2. Writes minVersion/maxVersion if update.rdf is found in the current directory.
@@ -21,10 +21,10 @@ if [ $# == 0 ] ; then
 fi
 cd "$1" || exit 2
 
-readlink=readlink
-[ "$(uname)" == "Darwin" ] && readlink=greadlink
+# To get greadlink, use  brew install coreutils
+[ "$(uname)" == "Darwin" ] && { shopt -s expand_aliases; alias readlink=greadlink; }
 
-curdir="$( cd "$( dirname "$( "${readlink}" -f "${BASH_SOURCE[0]}" )" )/" && pwd )"
+curdir="$( cd "$( dirname "$( readlink -f "${BASH_SOURCE[0]}" )" )/" && pwd )"
 
 DEFAULT_XPIPEM="${curdir}/codesigning.pem"
 # If environment variable is not set, use default PEM file:

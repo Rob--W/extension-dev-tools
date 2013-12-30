@@ -1,6 +1,6 @@
 #!/bin/bash
 # Copyright 2013 Rob Wu <gwnRob@gmail.com> (https://robwu.nl/)
-# Last modified 21 dec 2013
+# Last modified 30 dec 2013
 # 
 # Environment variables:
 # XARPATH   = Path to patched xar executable
@@ -8,10 +8,10 @@
 #
 # Requirements: certs/ directory as defined in README.md
 
-readlink=readlink
-[ "$(uname)" == "Darwin" ] && readlink=greadlink
+# To get greadlink, use  brew install coreutils
+[ "$(uname)" == "Darwin" ] && { shopt -s expand_aliases; alias readlink=greadlink; }
 
-curdir="$( cd "$( dirname "$( "${readlink}" -f "${BASH_SOURCE[0]}" )" )/" && pwd )"
+curdir="$( cd "$( dirname "$( readlink -f "${BASH_SOURCE[0]}" )" )/" && pwd )"
 certdir="${curdir}/certs"
 xar="${curdir}/xar"
 
