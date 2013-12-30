@@ -1,5 +1,5 @@
 Copyright Rob Wu <gwnRob@gmail.com> (https://robwu.nl/)  
-Last modified: 3 december 2013
+Last modified: 30 december 2013
 
 ## File structure
 * `update.plist` - to be placed on the server hosting the extension
@@ -86,7 +86,8 @@ In order to build (or even test) a Safari extension, you need a certificate from
         chmod -w private_key.key cer_sign_request.csr
 
 3. Upload `cer_sign_request.csr` to Apple, and download the certificate (link at step 1).
-4. Install the certificate on your OS.
+4. *Optional*. Only necessary if you wish to use the Extension Builder GUI in Apple Safari.
+   Install the certificate on your OS.
    My `.key` and `.csr` files were created on a different computer, so Safari did not accept
    my downloaded `safari_extension.cer` (because the corresponding private key was not found
    at the machine).  
