@@ -1,10 +1,16 @@
 Copyright Rob Wu <gwnRob@gmail.com> (https://robwu.nl/)
-Last modified: 21 december 2013
+Last modified: 2 April 2014
 
 ## Files
 
 - `crx` - Bash source that defines functions prefixed with "crx".
 - `launch-chrome-extensions-on-startup/` - Extension that opens `chrome://extensions/` on startup
+- `master_preferences` - Put this file near your Chromium executable if you want to override the
+   default profile settings. Some notable preferences:
+   * `"distribution.suppress_first_run_bubble = true` disables the first run search bubble.
+   * `extensions.ui.developer_mode = true` enables developer mode for extensions.
+   * and others (prompt to download instead of saving automatically, less network traffic by
+     disabling search suggestions, DNS prefetching, etc.)
 
 ## Bash commands
 ```

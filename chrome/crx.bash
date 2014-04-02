@@ -106,7 +106,7 @@ crxshow() {
 crxtest() {
     __get_crx_profile_path || return
     local command="cd \"${__CRX_PWD}\" && ${__CRX_CHROMIUM_BIN} --user-data-dir=\"${__CRX_PROFILE}\" \
---load-extension=\"${__CRX_EXTRA_EXTENSIONS},.\" --no-first-run $@"
+--load-extension=\"${__CRX_EXTRA_EXTENSIONS},.\" $@"
     echo "( ${command} )"
     bash -c "${command}"
 }
