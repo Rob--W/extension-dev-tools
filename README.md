@@ -29,3 +29,6 @@ the following line to your `.bashrc`:
 
 ## Opera
 ## Internet Explorer
+
+## Maxthon
+- See `maxthon/README.md` for details.

@@ -9,5 +9,6 @@ source "chrome/crx.bash"
 
 alias build-safari-extension="$PWD/safari/build-safari-extension.sh"
 alias build-firefox-extension="$PWD/firefox/build-firefox-extension.sh"
+alias mxpack="$PWD/maxthon/mxpack.py"
 
 popd >/dev/null
