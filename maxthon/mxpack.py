@@ -109,6 +109,9 @@ def createMxPak1(indir):
 
         with open(fullfilepath, 'rb') as f:
             filecontent = f.read()
+
+        if mxFileName.lower() == "def.json":
+            filecontent = prependBOMifNotUTF8(filecontent)
         # Size of file
         headers += i2b(len(filecontent))
 
@@ -116,6 +119,34 @@ def createMxPak1(indir):
 
         content += filecontent
     return headers + content
+
+
+def prependBOMifNotUTF8(data):
+    """
+    Ensures that def.json is either UTF16 or UTF-8 with BOM.
+    data = byte sequence
+    Returns the same byte sequence, optionally prefixed with a UTF8 BOM.
+    """
+    try:
+        data.decode('utf-16')
+        # If decoding succeeds, then it is UTF-16
+        return data
+    except UnicodeDecodeError:
+        # Otherwise, try to interpret the data as UTF-8.
+        BOM = b'\xEF\xBB\xBF'
+        if data.startswith(BOM):
+            return data
+        try:
+            data.decode('utf-8')
+            # If decoding succeeds, then it is UTF-8
+            return BOM + data
+        except UnicodeDecodeError as e:
+            # http://extension.maxthon.com/upload rejects files that are not
+            # encoded as UTF-16 or UTF-8.
+            sys.stderr.write("WARNING: def.json is not encoded as UTF-16 or ")
+            sys.stderr.write("UTF-8. Please save the file as UTF-8 or UTF-16.")
+            sys.stderr.write("\nUnicodeDecodeError: %s\n" % e)
+            return data
 
 
 if __name__ == "__main__":
