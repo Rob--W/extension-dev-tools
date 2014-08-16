@@ -1,10 +1,11 @@
-# (c) 2013 Rob Wu <gwnRob@gmail.com>
+# (c) 2013 - 2014 Rob Wu <rob@robwu.nl>
 # Exports several functions to ease Chrome extension development
 #
 # crx - Bootstraps Chrome extension if not existent
 # crxshow - Show whether profile directory for current instance exists.
 # crxtest - Starts Chrome, loading the Chrome extension from current path or parent
 # crxdel - Deletes temporary profile
+# crxget - Download and optionally suggest to extract a CRX file from the CWS or elsewhere
 #
 # Global variables
 # __CRX_CHROMIUM_BIN        - Name of Chromium executable
@@ -124,4 +125,89 @@ crxdel() {
     fi
     __CRX_PWD=
     __CRX_PROFILE=
+}
+
+
+# Download and extract crx file from the CWS for a given URL
+crxget() {
+    # Some OS-specific values. Doesn't really matter if we only want to inspect the source
+    local arch=
+    local os=
+    # See https://github.com/Rob--W/crxviewer/blob/master/src/chrome-platform-info.js
+    case "$(uname)" in
+        Darwin)
+            os=mac
+            ;;
+        *WIN*)
+            os=win
+            ;;
+        # Nope, no android
+        # Nope, no cros
+        *BSD)
+            os=openbsd
+            ;;
+        *)
+            # Default to Linux
+            os=Linux
+    esac
+
+    if [ "$(getconf LONG_BIT)" = "64" ] ; then
+        arch="x86-64"
+    else
+        arch="x86-32"
+    fi
+
+    local nacl_arch="$arch"
+    for arg in "$@" ; do
+        local dl_url=
+        local filename=
+        local url_without_questionmark="${arg%%\?*}"
+        if [[ "$url_without_questionmark" == *.crx ]] ; then
+            dl_url="$arg"
+            # Last part
+            filename="${url_without_questionmark##*/}"
+        else
+            local cws_id="$(echo "$arg" | grep -oP '\b[a-p]{32}\b' )"
+            if [ -n "$cws_id" ] ; then
+                # Assume that we got a CWS URL
+                # See https://github.com/Rob--W/crxviewer/blob/master/src/cws_pattern.js
+                dl_url="https://clients2.google.com/service/update2/crx?response=redirect"
+                dl_url+="&os=$os"
+                dl_url+="&arch=$arch"
+                dl_url+="&nacl_arch=$nacl_arch"
+                dl_url+="&prod=chromiumcrx"
+                dl_url+="&prodchannel=unknown"
+                dl_url+="&prodversion=31.0.1609.0"
+                dl_url+="&x=id%3D$cws_id"
+                dl_url+="%26uc"
+                filename="$cws_id.crx"
+            fi
+        fi
+
+        if [ -n "$dl_url" ] ; then
+            if [ -e "$filename" ] ; then
+                echo "$filename already exists, skipping download of $dl_url"
+            else
+                curl -L "$dl_url" -o "$filename"
+                # Do not use wget because it hangs on 204
+                #wget "$dl_url" -O "$filename"
+                if [ ! -e "$filename" ] ; then
+                    # Taken down, behind login, etc.
+                    echo "Cannot download $dl_url"
+                fi
+            fi
+        fi
+    done
+
+    cat <<'HERE'
+# To extract all downloaded crx files, run the following commands:
+for f in *.crx ; do
+    if [ -e "${f%.crx}" ] ; then
+        echo "${f%.crx} already exists. Skipping extraction of $f"
+    else
+        unzip "$f" -d "${f%.crx}"
+        rm -r "${f%.crx}/_metadata"
+    fi
+done
+HERE
 }
