@@ -28,23 +28,23 @@ __CRX_EXTRA_EXTENSIONS="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/launch-chr
 
 crx() {
     if [ $# -ne 0 ] ; then
-        if [ -e "$@" ] ; then
-            if [ ! -e "$@/manifest.json" ] ; then
-                echo "$@ already exists. Did not create crx files."
+        if [ -e "$*" ] ; then
+            if [ ! -e "$*/manifest.json" ] ; then
+                echo "$* already exists. Did not create crx files."
                 return
             else
-                echo "$@/manifest.json already found."
+                echo "$*/manifest.json already found."
             fi  
         else
-            if [ "$@" == ${PWD##*/} ] ; then
+            if [ "$*" == "${PWD##*/}" ] ; then
                 echo "Did not create directory or crx files, because the current directory has the same name"
                 return
             fi
-            echo "Created directory $@"
-            mkdir "$@"
+            echo "Created directory $*"
+            mkdir "$*"
         fi
-        echo "Changed directory to $@"
-        cd "$@"
+        echo "Changed directory to $*"
+        cd "$*"
     fi
     if [ -e manifest.json ] ; then
         echo "manifest.json already found"
