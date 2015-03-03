@@ -127,26 +127,32 @@ def prependBOMifNotUTF8(data):
     data = byte sequence
     Returns the same byte sequence, optionally prefixed with a UTF8 BOM.
     """
+    BOM = b'\xEF\xBB\xBF'
+    if data.startswith(BOM):
+        # UTF-8 BOM
+        return data
     try:
         data.decode('utf-16')
-        # If decoding succeeds, then it is UTF-16
-        return data
+        if b'\x00[' in data or b'[\x00' in data:
+            # If encoded as UTF-16, then it must contain the [ somewhere,
+            # together with a NUL byte. A valid def.json contains a "[".
+            # The "[" character is encoded as "\x00[" or "[\x00" in UTF-16.
+            return data
     except UnicodeDecodeError:
-        # Otherwise, try to interpret the data as UTF-8.
-        BOM = b'\xEF\xBB\xBF'
-        if data.startswith(BOM):
-            return data
-        try:
-            data.decode('utf-8')
-            # If decoding succeeds, then it is UTF-8
-            return BOM + data
-        except UnicodeDecodeError as e:
-            # http://extension.maxthon.com/upload rejects files that are not
-            # encoded as UTF-16 or UTF-8.
-            sys.stderr.write("WARNING: def.json is not encoded as UTF-16 or ")
-            sys.stderr.write("UTF-8. Please save the file as UTF-8 or UTF-16.")
-            sys.stderr.write("\nUnicodeDecodeError: %s\n" % e)
-            return data
+        # If decoding fails, then it is not UTF-16
+        pass
+    # Try to interpret the data as UTF-8.
+    try:
+        data.decode('utf-8')
+        # If decoding succeeds, then it is UTF-8
+        return BOM + data
+    except UnicodeDecodeError as e:
+        # http://extension.maxthon.com/upload rejects files that are not
+        # encoded as UTF-16 or UTF-8.
+        sys.stderr.write("WARNING: def.json is not encoded as UTF-16 or ")
+        sys.stderr.write("UTF-8. Please save the file as UTF-8 or UTF-16.")
+        sys.stderr.write("\nUnicodeDecodeError: %s\n" % e)
+        return data
 
 
 if __name__ == "__main__":
