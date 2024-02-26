@@ -177,7 +177,8 @@ crxget() {
                 dl_url+="&nacl_arch=$nacl_arch"
                 dl_url+="&prod=chromiumcrx"
                 dl_url+="&prodchannel=unknown"
-                dl_url+="&prodversion=31.0.1609.0"
+                dl_url+="&prodversion=${CHROME_VERSION:-122.0.6261.69}"
+                dl_url+="&acceptformat=crx2,crx3"
                 dl_url+="&x=id%3D$cws_id"
                 dl_url+="%26uc"
                 filename="$cws_id.crx"
@@ -188,6 +189,7 @@ crxget() {
             if [ -e "$filename" ] ; then
                 echo "$filename already exists, skipping download of $dl_url"
             else
+                echo "Downloading $filename"
                 curl -L "$dl_url" -o "$filename"
                 # Do not use wget because it hangs on 204
                 #wget "$dl_url" -O "$filename"
