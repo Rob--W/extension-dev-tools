@@ -201,6 +201,8 @@ crxget() {
         fi
     done
 
+    [ -z "$CRXGET_QUIET" ] || return
+
     cat <<'HERE'
 # To extract all downloaded crx files, run the following commands:
 for f in *.crx ; do
