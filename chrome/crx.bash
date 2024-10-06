@@ -49,28 +49,44 @@ crx() {
     if [ -e manifest.json ] ; then
         echo "manifest.json already found"
     else
+        # Note: manifest.json for Chrome does not require background.scripts,
+        #   but it is there for cross-browser compat with Firefox, which is
+        #   accepted without error in Chrome 121+ - https://crbug.com/40257904
+        # browser_specific_settings is not required in Chrome, and ignored
+        #   without warning in Chrome 131+ - https://crbug.com/40196501
+        #   We include it because it is almost required in Firefox - although
+        #   Firefox may load it without when loaded from a directory, when
+        #   uploaded to AMO or loaded as a zip file, it is required.
         echo '{
     "name": "Name ",
     "version": "1",
-    "manifest_version": 2,
+    "manifest_version": 3,
     "background": {
         "scripts": ["background.js"],
-        "persistent": true
+        "service_worker": "background.js"
     },
     "content_scripts": [{
         "run_at": "document_idle",
         "js": ["contentscript.js"],
         "matches": ["<all_urls>"]
     }],
-    "browser_action": {
+    "action": {
         "default_title": ""
     },
     "permissions": [
-        "tabs",
+        "tabs"
+    ],
+    "host_permissions": [
         "<all_urls>"
     ],
     "web_accessible_resources": [
-    ]
+    ],
+    "minimum_chrome_version": "88",
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "{'"$(uuidgen || echo '00000000-fa11-bacc-fa11-bacc00000000')"'}"
+        }
+    }
 }' > manifest.json
         touch background.js
         touch contentscript.js

@@ -8,7 +8,7 @@ chrome.runtime.onInstalled.addListener(function(details) {
     if (details.reason == 'install')
         showChromeExtensions();
 });
-chrome.browserAction.onClicked.addListener(showChromeExtensions);
+chrome.action.onClicked.addListener(showChromeExtensions);
 
 var TAB_NOT_FOUND = -1;
 function reduceChromeExtensionsTabId(tabId, tab) {
